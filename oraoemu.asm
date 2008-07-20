@@ -765,19 +765,19 @@ i_bra:         ld   a,(de)          ; unconditional branch [65C02]
                jr   i_branch
 
 i_bbr_0:       ld   a,%00000001     ; BBRn [65C02]
-               jp   i_bbs
+               jp   i_bbr
 i_bbr_1:       ld   a,%00000010
-               jp   i_bbs
+               jp   i_bbr
 i_bbr_2:       ld   a,%00000100
-               jp   i_bbs
+               jp   i_bbr
 i_bbr_3:       ld   a,%00001000
-               jp   i_bbs
+               jp   i_bbr
 i_bbr_4:       ld   a,%00010000
-               jp   i_bbs
+               jp   i_bbr
 i_bbr_5:       ld   a,%00100000
-               jp   i_bbs
+               jp   i_bbr
 i_bbr_6:       ld   a,%01000000
-               jp   i_bbs
+               jp   i_bbr
 i_bbr_7:       ld   a,%10000000
 i_bbr:         ex   de,hl
                ld   e,(hl)
