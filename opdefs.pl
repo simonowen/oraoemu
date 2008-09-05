@@ -2,12 +2,15 @@
 #
 # Calculates opcode addresses for the inline instruction decoding table
 #
-# Used by the VIC-20 emulator, available from:
+# Used by the Orao emulator, available from:
 #
 #     http://simonowen.com/sam/oraoemu/
 
+$source = 'oraoemu.asm';
+$codeend = 0xb000;
+
 # Assemble, outputting the symbols containing opcode implementation lengths
-$_ = `pyz80.py -s op_.*_len oraoemu.asm`;
+$_ = `pyz80.py -s op_.*_len $source`;
 
 # Create include file for definitions
 my $outfile = 'opdefs.inc';
@@ -19,9 +22,10 @@ if ($?)
 {
     # Create dummy offset list to allow lengths to be calculated
     for (0..255) {
-        printf FILE "op_%02x: equ &a000\n", $_;
+        printf FILE "op_%02x: equ &%04x\n", $_, $codeend-0x1000;
     }
 
+    print "Assembly error, creating dummy definitions!\n";
     exit;
 }
 
@@ -40,7 +44,7 @@ foreach $op (@todo)
 {
 MSB:
     # Work up through MSB values until we find a space
-    for ($msb = 0; ; $msb++)
+    for ($msb = 0 ; ; $msb++)
     {
         # Determine the extent of the opcode in the current MSB
         my $start = ($msb << 8) | $op;
@@ -68,15 +72,13 @@ MSB:
     }
 }
 
-# Position base so code finishes just before &b000
-$base = 0xb000 - (($size + 0xff) & ~0xff);
+# Position base so code finishes at the required point
+$base = $codeend - (($size + 0xff) & ~0xff);
 
 print "Size = $size, used = $used, slack = ", $size-$used, "\n";
 
 # Output sorted list of calculated positions
-foreach (sort { $a <=> $b } @todo)
-{
-    my $offset = $base + $off{$_};
+foreach (sort { $a <=> $b } @todo) {
     printf FILE "op_%02x:         equ  &%04x ; +$len{$_}\n", $_, $base+$off{$_};
 }
 
