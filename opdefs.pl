@@ -1,10 +1,11 @@
 #!/usr/bin/perl -w
 #
 # Calculates opcode addresses for the inline instruction decoding table
-#
-# Used by the Orao emulator, available from:
-#
-#     http://simonowen.com/sam/oraoemu/
+
+# Allow -v option for verbose output
+use Getopt::Std;
+$opt_v = 0;
+getopts('v');
 
 $source = 'oraoemu.asm';
 $codeend = 0xb000;
@@ -75,7 +76,7 @@ MSB:
 # Position base so code finishes at the required point
 $base = $codeend - (($size + 0xff) & ~0xff);
 
-print "Size = $size, used = $used, slack = ", $size-$used, "\n";
+print "Size = $size, used = $used, slack = ", $size-$used, "\n" unless !$opt_v;
 
 # Output sorted list of calculated positions
 foreach (sort { $a <=> $b } @todo) {

@@ -1,8 +1,6 @@
-; Orao emulator for SAM Coupe, by Simon Owen
+; Orao emulator for SAM Coupe (v1.2)
 ;
-; Version 1.2 (27/8/2008)
-;
-; WWW: http://simonowen.com/sam/oraoemu/
+; http://simonowen.com/sam/oraoemu/
 
 base:          equ  &9000
 
@@ -677,4 +675,4 @@ MDAT "crt13.rom"
 
 ; Sample
     dump low_page,0
-;MDAT "Snapshots/manic.dmp"
+;MDAT "snapshots/manic.dmp"
